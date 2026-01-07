@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nexus Media - A.I.S.E.N.D</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="nexus_styles.css">
+</head>
+<body>
+    <!-- THE VOID - Animated Background -->
+    <div class="void-container">
+        <div class="noise-layer"></div>
+        <div class="ambient-blob blob-green"></div>
+        <div class="ambient-blob blob-purple"></div>
+        <div class="ambient-blob blob-cyan"></div>
+    </div>
+
+    <!-- Loader Screen -->
+    <div class="loader-screen" id="loader">
+        <div class="loader-logo">🧠</div>
+        <div class="loader-text">INITIALIZING NEXUS...</div>
+        <div class="loader-bar"><div class="loader-progress"></div></div>
+    </div>
+
+    <!-- Main App Container -->
+    <div class="app-container" id="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="user-section">
+                <div class="avatar-halo" id="avatarHalo">
+                    <div class="avatar-rings">
+                        <svg viewBox="0 0 56 56">
+                            <circle class="avatar-ring-1" cx="28" cy="28" r="27"/>
+                            <circle class="avatar-ring-2" cx="28" cy="28" r="25"/>
+                            <circle class="avatar-ring-3" cx="28" cy="28" r="23"/>
+                        </svg>
+                    </div>
+                    <div class="avatar-img" id="userAvatar">👤</div>
+                </div>
+                <div class="user-info">
+                    <div class="user-name" id="userName">Foydalanuvchi</div>
+                    <div class="user-level">⚡ <span id="userLevel">Level 1</span></div>
+                </div>
+            </div>
+            <div class="xp-display">
+                <div class="xp-badge">
+                    <span class="xp-icon">✨</span>
+                    <span class="xp-value" id="xpValue">0</span>
+                </div>
+                <div class="streak-badge" onclick="showStreakInfo()">
+                    <span class="streak-flame">🔥</span>
+                    <span class="streak-value" id="streakValue">0</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Scrollable Content -->
+        <div class="content-scroll">
+            <!-- TAB 1: HOME / DASHBOARD -->
+            <div class="tab-content active" id="tab-home">
+                <!-- Hero Button: AI Test Yaratish -->
+                <div class="hero-button" onclick="openAIQuiz()">
+                    <div class="hero-bg"></div>
+                    <div class="hero-content">
+                        <div class="hero-icon">🧠</div>
+                        <div class="hero-text">
+                            <div class="hero-title">AI TEST YARATISH</div>
+                            <div class="hero-subtitle">Sun'iy intellekt bilan test generatsiya qiling</div>
+                        </div>
+                        <div class="hero-arrow">→</div>
+                    </div>
+                </div>
+
+                <!-- Action Cards Grid -->
+                <div class="action-grid">
+                    <!-- Live Battle Card -->
+                    <div class="action-card card-live-battle" onclick="openLobby()">
+                        <div class="lightning-bg">
+                            <div class="lightning"></div>
+                            <div class="lightning"></div>
+                            <div class="lightning"></div>
+                        </div>
+                        <div class="live-indicator">
+                            <div class="live-dot"></div>
+                            <span class="live-text">LIVE</span>
+                        </div>
+                        <div class="action-icon">📡</div>
+                        <div>
+                            <div class="action-title">Live Battle</div>
+                            <div class="action-subtitle">Guruh bilan raqobat</div>
+                        </div>
+                    </div>
+
+                    <!-- Duel Card -->
+                    <div class="action-card card-duel" onclick="startDuel()">
+                        <div class="swords-container">
+                            <span class="sword-left">⚔️</span>
+                            <span class="spark">✨</span>
+                        </div>
+                        <div>
+                            <div class="action-title">Duel Mode</div>
+                            <div class="action-subtitle">1 vs 1 jang</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RPG Progress Card -->
+                <div class="rpg-card" onclick="openProfile()">
+                    <div class="rpg-header">
+                        <div class="rpg-title">🎮 RPG Tizimi</div>
+                        <div class="level-badge" id="levelBadge">
+                            Lvl <span id="levelNum">1</span>
+                            <div class="level-stars">
+                                <span class="star">⭐</span>
+                                <span class="star">⭐</span>
+                                <span class="star">⭐</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rpg-progress">
+                        <div class="rpg-progress-bar" id="rpgProgress" style="width: 35%"></div>
+                    </div>
+                    <div class="rpg-stats">
+                        <span>350 / 1000 XP</span>
+                        <span>Keyingi level: 650 XP</span>
+                    </div>
+                </div>
+
+                <!-- Study Tools Slider -->
+                <div class="study-section">
+                    <div class="section-title">📚 O'quv Vositalari</div>
+                    <div class="study-slider">
+                        <div class="study-card" onclick="openPDFQuiz()">
+                            <div class="study-icon">📄</div>
+                            <div class="study-title">PDF Test</div>
+                        </div>
+                        <div class="study-card" onclick="openMindMap()">
+                            <div class="study-icon">🗺️</div>
+                            <div class="study-title">MindMap</div>
+                        </div>
+                        <div class="study-card" onclick="openFlashcards()">
+                            <div class="study-icon">🃏</div>
+                            <div class="study-title">Flashcards</div>
+                        </div>
+                        <div class="study-card" onclick="openNotes()">
+                            <div class="study-icon">📝</div>
+                            <div class="study-title">Eslatmalar</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: EDUCATION -->
+            <div class="tab-content" id="tab-edu">
+                <div class="section-title">🎓 Ta'lim Markazi</div>
+                <!-- Content will be added -->
+            </div>
+
+            <!-- TAB 3: GAME -->
+            <div class="tab-content" id="tab-game">
+                <div class="section-title">🎮 O'yin Markazi</div>
+                <!-- Content will be added -->
+            </div>
+
+            <!-- TAB 4: PREMIUM -->
+            <div class="tab-content" id="tab-premium">
+                <!-- Premium content here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Shop FAB -->
+    <div class="shop-fab" onclick="openShop()">
+        💰
+        <span class="coin-particle">🪙</span>
+        <span class="coin-particle">🪙</span>
+        <span class="coin-particle">🪙</span>
+    </div>
+
+    <!-- Footer Navigation -->
+    <nav class="footer-nav">
+        <div class="nav-item active" onclick="switchTab('home')">
+            <span class="nav-icon">🏠</span>
+            <span class="nav-label">Bosh</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('edu')">
+            <span class="nav-icon">📚</span>
+            <span class="nav-label">Ta'lim</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('game')">
+            <span class="nav-icon">🎮</span>
+            <span class="nav-label">O'yin</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('premium')">
+            <span class="nav-icon">💎</span>
+            <span class="nav-label">Premium</span>
+        </div>
+    </nav>
+
+    <!-- Overlays will be added via JS -->
+    <div id="overlayContainer"></div>
+
+    <script src="nexus_app.js"></script>
+</body>
+</html>
