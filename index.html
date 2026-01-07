@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nexus Media</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* ═══════════════════════════════════════════════════════════════════
+           NEXUS MEDIA - HYPERMAX DARK THEME
+           Professional Minimalist Design
+           ═══════════════════════════════════════════════════════════════════ */
+        
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a24;
+            --bg-elevated: #22222e;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-muted: #606070;
+            --accent-green: #00ff88;
+            --accent-purple: #a855f7;
+            --accent-blue: #3b82f6;
+            --accent-orange: #f97316;
+            --accent-gold: #fbbf24;
+            --accent-red: #ef4444;
+            --gradient-premium: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);
+            --gradient-gold: linear-gradient(135deg, #fbbf24 0%, #f97316 100%);
+            --gradient-green: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+            --border-subtle: rgba(255,255,255,0.06);
+            --shadow-glow: 0 0 20px rgba(0,255,136,0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* ═══════════ APP CONTAINER ═══════════ */
+        .app {
+            max-width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 80px;
+        }
+
+        /* ═══════════ HEADER ═══════════ */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-subtle);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--gradient-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            border: 2px solid var(--accent-green);
+            box-shadow: 0 0 15px rgba(0,255,136,0.3);
+        }
+
+        .user-info h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .user-level {
+            font-size: 12px;
+            color: var(--accent-green);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .stat-badge {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 12px;
+            background: var(--bg-card);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .stat-badge.xp { color: var(--accent-green); }
+        .stat-badge.gold { color: var(--accent-gold); }
+
+        /* ═══════════ CONTENT ═══════════ */
+        .content {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ═══════════ SECTION TITLE ═══════════ */
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin: 20px 0 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section-title:first-child { margin-top: 0; }
+
+        /* ═══════════ CARDS ═══════════ */
+        .card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border-subtle);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:active {
+            transform: scale(0.98);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        /* ═══════════ STAT CARDS ═══════════ */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .stat-card .icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .stat-card .value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-card .label {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .stat-card.xp .value { color: var(--accent-green); }
+        .stat-card.gold .value { color: var(--accent-gold); }
+        .stat-card.level .value { color: var(--accent-purple); }
+        .stat-card.streak .value { color: var(--accent-orange); }
+
+        /* ═══════════ PROGRESS BAR ═══════════ */
+        .progress-section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .progress-label {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .progress-value {
+            font-size: 14px;
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--bg-elevated);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-green);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        /* ═══════════ ACTION BUTTONS ═══════════ */
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .action-btn {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 20px 16px;
+            text-align: center;
+            border: 1px solid var(--border-subtle);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-btn:active {
+            transform: scale(0.95);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .action-btn .icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .action-btn .title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .action-btn .subtitle {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .action-btn.primary {
+            background: var(--gradient-green);
+            border: none;
+        }
+
+        .action-btn.primary .title,
+        .action-btn.primary .subtitle {
+            color: #000;
+        }
+
+        /* ═══════════ LIST ITEMS ═══════════ */
+        .list-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            margin-bottom: 8px;
+            border: 1px solid var(--border-subtle);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .list-item:active {
+            transform: scale(0.98);
+            background: var(--bg-elevated);
+        }
+
+        .list-item .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            background: var(--bg-elevated);
+        }
+
+        .list-item .info {
+            flex: 1;
+        }
+
+        .list-item .title {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .list-item .desc {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .list-item .arrow {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .list-item .badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge.new {
+            background: var(--accent-green);
+            color: #000;
+        }
+
+        .badge.hot {
+            background: var(--accent-orange);
+            color: #fff;
+        }
+
+        /* ═══════════ LEADERBOARD ═══════════ */
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            margin-bottom: 8px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .leaderboard-item.top-1 {
+            background: linear-gradient(135deg, rgba(251,191,36,0.15) 0%, var(--bg-card) 100%);
+            border-color: rgba(251,191,36,0.3);
+        }
+
+        .leaderboard-item.top-2 {
+            background: linear-gradient(135deg, rgba(192,192,192,0.1) 0%, var(--bg-card) 100%);
+            border-color: rgba(192,192,192,0.2);
+        }
+
+        .leaderboard-item.top-3 {
+            background: linear-gradient(135deg, rgba(205,127,50,0.1) 0%, var(--bg-card) 100%);
+            border-color: rgba(205,127,50,0.2);
+        }
+
+        .rank {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            background: var(--bg-elevated);
+        }
+
+        .rank.gold { background: var(--accent-gold); color: #000; }
+        .rank.silver { background: #c0c0c0; color: #000; }
+        .rank.bronze { background: #cd7f32; color: #fff; }
+
+        .leaderboard-item .avatar-sm {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--bg-elevated);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .leaderboard-item .name {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .leaderboard-item .xp {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent-green);
+        }
+
+        /* ═══════════ ACHIEVEMENTS ═══════════ */
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .achievement {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 16px 12px;
+            text-align: center;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .achievement.unlocked {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 15px rgba(251,191,36,0.2);
+        }
+
+        .achievement.locked {
+            opacity: 0.5;
+        }
+
+        .achievement .icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .achievement .name {
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        /* ═══════════ PREMIUM CARDS ═══════════ */
+        .premium-card {
+            background: var(--gradient-premium);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .premium-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        }
+
+        .premium-card .title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .premium-card .price {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .premium-card .period {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 16px;
+        }
+
+        .premium-card .features {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .premium-card .features li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .premium-card .features li::before {
+            content: '✓';
+            color: var(--accent-green);
+            font-weight: 700;
+        }
+
+        .premium-btn {
+            width: 100%;
+            padding: 14px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+
+        .premium-btn:active {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* ═══════════ QUIZ CARD ═══════════ */
+        .quiz-hero {
+            background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-elevated) 100%);
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 16px;
+            border: 1px solid var(--accent-green);
+            box-shadow: 0 0 30px rgba(0,255,136,0.1);
+        }
+
+        .quiz-hero .icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .quiz-hero .title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .quiz-hero .desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .quiz-start-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--gradient-green);
+            border: none;
+            border-radius: 14px;
+            color: #000;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .quiz-start-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* ═══════════ BOTTOM NAV ═══════════ */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 20px 20px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-subtle);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-item.active {
+            background: rgba(0,255,136,0.1);
+        }
+
+        .nav-item .icon {
+            font-size: 22px;
+            color: var(--text-muted);
+            transition: color 0.2s;
+        }
+
+        .nav-item.active .icon {
+            color: var(--accent-green);
+        }
+
+        .nav-item .label {
+            font-size: 11px;
+            color: var(--text-muted);
+            transition: color 0.2s;
+        }
+
+        .nav-item.active .label {
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        /* ═══════════ TOAST ═══════════ */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--bg-elevated);
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 2000;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success { border-left: 4px solid var(--accent-green); }
+        .toast.error { border-left: 4px solid var(--accent-red); }
+        .toast.warning { border-left: 4px solid var(--accent-orange); }
+
+        /* ═══════════ MODAL ═══════════ */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            padding: 24px;
+            width: 90%;
+            max-width: 360px;
+            transform: scale(0.9);
+            transition: transform 0.3s;
+        }
+
+        .modal-overlay.show .modal {
+            transform: scale(1);
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .modal-close {
+            width: 100%;
+            padding: 14px;
+            background: var(--bg-card);
+            border: none;
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 16px;
+        }
+
+        /* ═══════════ UTILITIES ═══════════ */
+        .text-green { color: var(--accent-green); }
+        .text-gold { color: var(--accent-gold); }
+        .text-purple { color: var(--accent-purple); }
+        .text-muted { color: var(--text-muted); }
+        .mt-16 { margin-top: 16px; }
+        .mb-16 { margin-bottom: 16px; }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="user-section">
+                <div class="avatar" id="userAvatar">👤</div>
+                <div class="user-info">
+                    <h2 id="userName">Foydalanuvchi</h2>
+                    <div class="user-level">⚡ <span id="userLevel">Level 1</span></div>
+                </div>
+            </div>
+            <div class="stats-row">
+                <div class="stat-badge xp">
+                    <span>✨</span>
+                    <span id="headerXP">0</span>
+                </div>
+                <div class="stat-badge gold">
+                    <span>🪙</span>
+                    <span id="headerGold">0</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- TAB: PROFIL / BOSH -->
+            <div class="tab-content active" id="tab-home">
+                <div class="section-title">📊 Statistika</div>
+                <div class="stats-grid">
+                    <div class="stat-card xp">
+                        <div class="icon">✨</div>
+                        <div class="value" id="statXP">0</div>
+                        <div class="label">Jami XP</div>
+                    </div>
+                    <div class="stat-card gold">
+                        <div class="icon">🪙</div>
+                        <div class="value" id="statGold">0</div>
+                        <div class="label">Gold</div>
+                    </div>
+                    <div class="stat-card level">
+                        <div class="icon">📈</div>
+                        <div class="value" id="statLevel">1</div>
+                        <div class="label">Level</div>
+                    </div>
+                    <div class="stat-card streak">
+                        <div class="icon">🔥</div>
+                        <div class="value" id="statStreak">0</div>
+                        <div class="label">Streak (kun)</div>
+                    </div>
+                </div>
+
+                <div class="progress-section">
+                    <div class="progress-header">
+                        <span class="progress-label">Keyingi levelgacha</span>
+                        <span class="progress-value" id="progressPercent">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="section-title">⚡ Tez harakatlar</div>
+                <div class="action-grid">
+                    <div class="action-btn primary" onclick="openAIQuiz()">
+                        <div class="icon">🧠</div>
+                        <div class="title">AI Quiz</div>
+                        <div class="subtitle">Test yaratish</div>
+                    </div>
+                    <div class="action-btn" onclick="claimDailyBonus()">
+                        <div class="icon">🎁</div>
+                        <div class="title">Kunlik Bonus</div>
+                        <div class="subtitle">+25 XP</div>
+                    </div>
+                    <div class="action-btn" onclick="openMining()">
+                        <div class="icon">⛏️</div>
+                        <div class="title">Mining</div>
+                        <div class="subtitle">XP yig'ish</div>
+                    </div>
+                    <div class="action-btn" onclick="openReferral()">
+                        <div class="icon">👥</div>
+                        <div class="title">Referal</div>
+                        <div class="subtitle">Do'st taklif</div>
+                    </div>
+                </div>
+
+                <div class="section-title">🏆 Yutuqlarim</div>
+                <div class="achievement-grid">
+                    <div class="achievement unlocked">
+                        <div class="icon">🌟</div>
+                        <div class="name">Yangi boshlovchi</div>
+                    </div>
+                    <div class="achievement unlocked">
+                        <div class="icon">📚</div>
+                        <div class="name">Kitobxon</div>
+                    </div>
+                    <div class="achievement locked">
+                        <div class="icon">🔥</div>
+                        <div class="name">7 kun streak</div>
+                    </div>
+                    <div class="achievement locked">
+                        <div class="icon">💎</div>
+                        <div class="name">Premium</div>
+                    </div>
+                    <div class="achievement locked">
+                        <div class="icon">🏆</div>
+                        <div class="name">Top 10</div>
+                    </div>
+                    <div class="achievement locked">
+                        <div class="icon">👑</div>
+                        <div class="name">Legend</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: TA'LIM -->
+            <div class="tab-content" id="tab-edu">
+                <div class="quiz-hero">
+                    <div class="icon">🧠</div>
+                    <div class="title">AI Quiz Generator</div>
+                    <div class="desc">Sun'iy intellekt yordamida istalgan mavzuda test yarating</div>
+                    <button class="quiz-start-btn" onclick="openAIQuiz()">
+                        🚀 Test yaratish
+                    </button>
+                </div>
+
+                <div class="section-title">📚 O'quv vositalari</div>
+                <div class="list-item" onclick="openFlashcards()">
+                    <div class="icon">🃏</div>
+                    <div class="info">
+                        <div class="title">Flashcards</div>
+                        <div class="desc">Kartochkalar bilan o'rganish</div>
+                    </div>
+                    <span class="badge new">Yangi</span>
+                </div>
+                <div class="list-item" onclick="openMindMap()">
+                    <div class="icon">🗺️</div>
+                    <div class="info">
+                        <div class="title">Mind Map</div>
+                        <div class="desc">Fikrlar xaritasi</div>
+                    </div>
+                    <i class="fas fa-chevron-right arrow"></i>
+                </div>
+                <div class="list-item" onclick="openPodcast()">
+                    <div class="icon">🎧</div>
+                    <div class="info">
+                        <div class="title">Podcastlar</div>
+                        <div class="desc">Audio darslar</div>
+                    </div>
+                    <i class="fas fa-chevron-right arrow"></i>
+                </div>
+                <div class="list-item" onclick="openCourses()">
+                    <div class="icon">🎓</div>
+                    <div class="info">
+                        <div class="title">Kurslar</div>
+                        <div class="desc">Professional ta'lim</div>
+                    </div>
+                    <span class="badge hot">🔥</span>
+                </div>
+
+                <div class="section-title">📊 Quiz statistikasi</div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="icon">✅</div>
+                        <div class="value" id="quizCompleted">0</div>
+                        <div class="label">Yechilgan</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="icon">🎯</div>
+                        <div class="value" id="quizAccuracy">0%</div>
+                        <div class="label">Aniqlik</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: O'YIN -->
+            <div class="tab-content" id="tab-game">
+                <div class="section-title">⚔️ O'yin rejimlari</div>
+                <div class="action-grid">
+                    <div class="action-btn" onclick="startLiveBattle()">
+                        <div class="icon">📡</div>
+                        <div class="title">Live Battle</div>
+                        <div class="subtitle">Guruh bilan</div>
+                    </div>
+                    <div class="action-btn" onclick="startDuel()">
+                        <div class="icon">⚔️</div>
+                        <div class="title">Duel</div>
+                        <div class="subtitle">1 vs 1</div>
+                    </div>
+                </div>
+
+                <div class="section-title">🏆 Haftalik reyting</div>
+                <div id="leaderboard">
+                    <div class="leaderboard-item top-1">
+                        <div class="rank gold">1</div>
+                        <div class="avatar-sm">👤</div>
+                        <div class="name">Sardor</div>
+                        <div class="xp">2,450 XP</div>
+                    </div>
+                    <div class="leaderboard-item top-2">
+                        <div class="rank silver">2</div>
+                        <div class="avatar-sm">👤</div>
+                        <div class="name">Jasur</div>
+                        <div class="xp">2,180 XP</div>
+                    </div>
+                    <div class="leaderboard-item top-3">
+                        <div class="rank bronze">3</div>
+                        <div class="avatar-sm">👤</div>
+                        <div class="name">Dilshod</div>
+                        <div class="xp">1,920 XP</div>
+                    </div>
+                    <div class="leaderboard-item">
+                        <div class="rank">4</div>
+                        <div class="avatar-sm">👤</div>
+                        <div class="name">Bekzod</div>
+                        <div class="xp">1,750 XP</div>
+                    </div>
+                    <div class="leaderboard-item">
+                        <div class="rank">5</div>
+                        <div class="avatar-sm">👤</div>
+                        <div class="name">Shoxrux</div>
+                        <div class="xp">1,680 XP</div>
+                    </div>
+                </div>
+
+                <div class="section-title">🎯 Kunlik vazifa</div>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">3 ta quiz yechish</div>
+                        <span class="text-gold">+100 XP</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 33%"></div>
+                    </div>
+                    <div class="text-muted mt-16" style="font-size: 12px;">1/3 bajarildi</div>
+                </div>
+
+                <div class="section-title">🏅 Yutuqlar</div>
+                <div class="achievement-grid">
+                    <div class="achievement unlocked">
+                        <div class="icon">⚡</div>
+                        <div class="name">Tez javob</div>
+                    </div>
+                    <div class="achievement unlocked">
+                        <div class="icon">🎯</div>
+                        <div class="name">100% aniq</div>
+                    </div>
+                    <div class="achievement locked">
+                        <div class="icon">🏆</div>
+                        <div class="name">Champion</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: PREMIUM -->
+            <div class="tab-content" id="tab-premium">
+                <div class="premium-card">
+                    <div class="title">💎 Premium</div>
+                    <div class="price">29,990 so'm</div>
+                    <div class="period">30 kunlik obuna</div>
+                    <ul class="features">
+                        <li>Cheksiz AI Quiz</li>
+                        <li>Cheksiz yuklab olish</li>
+                        <li>Premium kitoblar</li>
+                        <li>HD/4K filmlar</li>
+                        <li>Har soatda avtomatik XP</li>
+                        <li>Reklama yo'q</li>
+                    </ul>
+                    <button class="premium-btn" onclick="buyPremium('premium')">
+                        Sotib olish
+                    </button>
+                </div>
+
+                <div class="premium-card" style="background: var(--gradient-gold);">
+                    <div class="title">🏆 Exclusive</div>
+                    <div class="price">47,990 so'm</div>
+                    <div class="period">30 kunlik obuna</div>
+                    <ul class="features">
+                        <li>Premium'dagi barcha imkoniyatlar</li>
+                        <li>Eksklyuziv kontentlar</li>
+                        <li>VIP qo'llab-quvvatlash</li>
+                        <li>Maxsus badgelar</li>
+                        <li>2x XP bonus</li>
+                    </ul>
+                    <button class="premium-btn" onclick="buyPremium('exclusive')">
+                        Sotib olish
+                    </button>
+                </div>
+
+                <div class="section-title">🛒 XP evaziga Premium</div>
+                <div class="list-item" onclick="buyWithXP(1)">
+                    <div class="icon">⭐</div>
+                    <div class="info">
+                        <div class="title">1 kunlik Premium</div>
+                        <div class="desc">4,500 XP</div>
+                    </div>
+                    <i class="fas fa-chevron-right arrow"></i>
+                </div>
+                <div class="list-item" onclick="buyWithXP(7)">
+                    <div class="icon">⭐</div>
+                    <div class="info">
+                        <div class="title">7 kunlik Premium</div>
+                        <div class="desc">22,500 XP</div>
+                    </div>
+                    <i class="fas fa-chevron-right arrow"></i>
+                </div>
+                <div class="list-item" onclick="buyWithXP(30)">
+                    <div class="icon">⭐</div>
+                    <div class="info">
+                        <div class="title">30 kunlik Premium</div>
+                        <div class="desc">67,500 XP</div>
+                    </div>
+                    <i class="fas fa-chevron-right arrow"></i>
+                </div>
+
+                <div class="section-title">🎁 Promo kod</div>
+                <div class="list-item" onclick="openPromoCode()">
+                    <div class="icon">🎟️</div>
+                    <div class="info">
+                        <div class="title">Promo kod kiritish</div>
+                        <div class="desc">Bonus olish</div>
+                    </div>
+                    <i class="fas fa-chevron-right arrow"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <div class="nav-item active" onclick="switchTab('home')">
+                <div class="icon">🏠</div>
+                <div class="label">Bosh</div>
+            </div>
+            <div class="nav-item" onclick="switchTab('edu')">
+                <div class="icon">📚</div>
+                <div class="label">Ta'lim</div>
+            </div>
+            <div class="nav-item" onclick="switchTab('game')">
+                <div class="icon">🎮</div>
+                <div class="label">O'yin</div>
+            </div>
+            <div class="nav-item" onclick="switchTab('premium')">
+                <div class="icon">💎</div>
+                <div class="label">Premium</div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <div class="modal-title" id="modalTitle">Modal</div>
+            <div class="modal-content" id="modalContent"></div>
+            <button class="modal-close" onclick="closeModal()">Yopish</button>
+        </div>
+    </div>
+
+    <script>
+        // ═══════════ TELEGRAM WEBAPP ═══════════
+        const tg = window.Telegram?.WebApp;
+        
+        // ═══════════ HAPTIC FEEDBACK ═══════════
+        const Haptic = {
+            light: () => tg?.HapticFeedback?.impactOccurred('light'),
+            medium: () => tg?.HapticFeedback?.impactOccurred('medium'),
+            heavy: () => tg?.HapticFeedback?.impactOccurred('heavy'),
+            success: () => tg?.HapticFeedback?.notificationOccurred('success'),
+            error: () => tg?.HapticFeedback?.notificationOccurred('error'),
+            warning: () => tg?.HapticFeedback?.notificationOccurred('warning')
+        };
+
+        // ═══════════ USER DATA ═══════════
+        let userData = {
+            id: 0,
+            name: 'Foydalanuvchi',
+            xp: 0,
+            gold: 0,
+            level: 1,
+            streak: 0,
+            levelProgress: 0,
+            quizzesCompleted: 0,
+            accuracy: 0
+        };
+
+        // ═══════════ INITIALIZATION ═══════════
+        document.addEventListener('DOMContentLoaded', () => {
+            if (tg) {
+                tg.ready();
+                tg.expand();
+                tg.setHeaderColor('#0a0a0f');
+                tg.setBackgroundColor('#0a0a0f');
+            }
+            
+            initUserData();
+            checkURLParams();
+        });
+
+        function initUserData() {
+            // Get from Telegram
+            if (tg?.initDataUnsafe?.user) {
+                const u = tg.initDataUnsafe.user;
+                userData.id = u.id;
+                userData.name = u.first_name + (u.last_name ? ' ' + u.last_name : '');
+            }
+            
+            // Demo data for testing
+            userData = {
+                ...userData,
+                xp: 1815,
+                gold: 2500,
+                level: 5,
+                streak: 7,
+                levelProgress: 65,
+                quizzesCompleted: 42,
+                accuracy: 78
+            };
+            
+            updateUI();
+        }
+
+        function checkURLParams() {
+            const params = new URLSearchParams(window.location.search);
+            const tab = params.get('tab');
+            if (tab) {
+                switchTab(tab);
+            }
+        }
+
+        function updateUI() {
+            // Header
+            document.getElementById('userName').textContent = userData.name;
+            document.getElementById('userLevel').textContent = 'Level ' + userData.level;
+            document.getElementById('headerXP').textContent = formatNumber(userData.xp);
+            document.getElementById('headerGold').textContent = formatNumber(userData.gold);
+            
+            // Stats
+            document.getElementById('statXP').textContent = formatNumber(userData.xp);
+            document.getElementById('statGold').textContent = formatNumber(userData.gold);
+            document.getElementById('statLevel').textContent = userData.level;
+            document.getElementById('statStreak').textContent = userData.streak;
+            
+            // Progress
+            document.getElementById('progressPercent').textContent = userData.levelProgress + '%';
+            document.getElementById('progressFill').style.width = userData.levelProgress + '%';
+            
+            // Quiz stats
+            document.getElementById('quizCompleted').textContent = userData.quizzesCompleted;
+            document.getElementById('quizAccuracy').textContent = userData.accuracy + '%';
+            
+            // Avatar
+            if (userData.name) {
+                document.getElementById('userAvatar').textContent = userData.name.charAt(0).toUpperCase();
+            }
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toLocaleString();
+        }
+
+        // ═══════════ TAB SWITCHING ═══════════
+        function switchTab(tabId) {
+            Haptic.light();
+            
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById('tab-' + tabId).classList.add('active');
+            
+            // Update nav
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+        }
+
+        // ═══════════ ACTIONS ═══════════
+        function openAIQuiz() {
+            Haptic.medium();
+            showToast('🧠 AI Quiz ochilmoqda...', 'success');
+            
+            // Send to bot
+            if (tg) {
+                tg.sendData(JSON.stringify({
+                    action: 'open_ai_quiz'
+                }));
+            }
+        }
+
+        function claimDailyBonus() {
+            Haptic.success();
+            userData.xp += 25;
+            updateUI();
+            showToast('🎁 +25 XP bonus olindi!', 'success');
+            
+            if (tg) {
+                tg.sendData(JSON.stringify({
+                    action: 'claim_daily_bonus'
+                }));
+            }
+        }
+
+        function openMining() {
+            Haptic.light();
+            showToast('⛏️ Mining ochilmoqda...', 'success');
+            
+            if (tg) {
+                tg.sendData(JSON.stringify({
+                    action: 'open_mining'
+                }));
+            }
+        }
+
+        function openReferral() {
+            Haptic.light();
+            showModal('👥 Referal', `
+                <p style="margin-bottom: 16px;">Do'stlaringizni taklif qiling va bonus oling!</p>
+                <p style="color: var(--accent-green);">Har bir referal: +75 XP</p>
+            `);
+        }
+
+        function openFlashcards() {
+            Haptic.light();
+            showToast('🃏 Flashcards tez orada...', 'warning');
+        }
+
+        function openMindMap() {
+            Haptic.light();
+            showToast('🗺️ Mind Map tez orada...', 'warning');
+        }
+
+        function openPodcast() {
+            Haptic.light();
+            if (tg) {
+                tg.sendData(JSON.stringify({ action: 'open_podcasts' }));
+            }
+        }
+
+        function openCourses() {
+            Haptic.light();
+            if (tg) {
+                tg.sendData(JSON.stringify({ action: 'open_courses' }));
+            }
+        }
+
+        function startLiveBattle() {
+            Haptic.heavy();
+            showToast('📡 Live Battle qidirilmoqda...', 'success');
+            
+            if (tg) {
+                tg.sendData(JSON.stringify({
+                    action: 'join_live_battle'
+                }));
+            }
+        }
+
+        function startDuel() {
+            Haptic.heavy();
+            showToast('⚔️ Raqib qidirilmoqda...', 'success');
+            
+            if (tg) {
+                tg.sendData(JSON.stringify({
+                    action: 'start_duel'
+                }));
+            }
+        }
+
+        function buyPremium(type) {
+            Haptic.medium();
+            showToast('💎 To\'lov sahifasiga o\'tilmoqda...', 'success');
+            
+            if (tg) {
+                tg.sendData(JSON.stringify({
+                    action: 'buy_premium',
+                    type: type
+                }));
+            }
+        }
+
+        function buyWithXP(days) {
+            Haptic.medium();
+            const prices = { 1: 4500, 7: 22500, 30: 67500 };
+            const price = prices[days];
+            
+            if (userData.xp >= price) {
+                showModal('✅ Tasdiqlash', `
+                    <p style="margin-bottom: 16px;">${days} kunlik Premium sotib olasizmi?</p>
+                    <p style="color: var(--accent-gold);">Narx: ${formatNumber(price)} XP</p>
+                `);
+            } else {
+                showToast('❌ Yetarli XP yo\'q!', 'error');
+            }
+        }
+
+        function openPromoCode() {
+            Haptic.light();
+            if (tg) {
+                tg.sendData(JSON.stringify({ action: 'open_promo' }));
+            }
+        }
+
+        // ═══════════ TOAST ═══════════
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast ' + type + ' show';
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ═══════════ MODAL ═══════════
+        function showModal(title, content) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalContent').innerHTML = content;
+            document.getElementById('modal').classList.add('show');
+        }
+
+        function closeModal() {
+            Haptic.light();
+            document.getElementById('modal').classList.remove('show');
+        }
+    </script>
+</body>
+</html>
