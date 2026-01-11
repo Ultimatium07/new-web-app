@@ -692,27 +692,52 @@
     </div>
     
     <!-- Scripts -->
+    <script src="app.js"></script>
     <script src="effects.js"></script>
     <script src="gamification.js"></script>
     <script src="mobile.js"></script>
     <script src="security.js"></script>
     <script src="analytics.js"></script>
-    <script src="app.js"></script>
     
     <!-- Main App Initialization -->
     <script>
         // Initialize app when DOM is ready
         document.addEventListener('DOMContentLoaded', () => {
-            // Initialize all modules
-            if (window.QuantumEffects) window.QuantumEffects.init();
-            if (window.GamificationEngine) window.GamificationEngine.init();
-            if (window.MobileOptimizer) window.MobileOptimizer.init();
-            if (window.SecuritySystem) window.SecuritySystem.init();
-            if (window.AnalyticsEngine) window.AnalyticsEngine.init();
-            
-            // Initialize main app
-            if (window.NexusApp) {
-                window.NexusApp.init();
+            try {
+                // Initialize all modules safely
+                if (window.QuantumEffects) {
+                    window.QuantumEffects.init();
+                }
+                
+                if (window.GamificationEngine) {
+                    window.GamificationEngine.init();
+                }
+                
+                if (window.MobileOptimizer) {
+                    window.MobileOptimizer.init();
+                }
+                
+                if (window.SecuritySystem) {
+                    window.SecuritySystem.init();
+                }
+                
+                if (window.AnalyticsEngine) {
+                    window.AnalyticsEngine.init();
+                }
+                
+                // Initialize main app
+                if (window.NexusApp) {
+                    window.NexusApp.init();
+                }
+                
+                console.log('✅ All modules loaded successfully!');
+            } catch (error) {
+                console.error('❌ Error initializing app:', error);
+                // Hide loader even if error occurs
+                const loader = document.getElementById('loader');
+                if (loader) {
+                    loader.style.display = 'none';
+                }
             }
         });
         
@@ -749,13 +774,13 @@
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
-            document.querySelector(`[data-section="${sectionName}"]`).classList.add('active');
+            document.querySelector(`[data-section="${sectionName}"]`)?.classList.add('active');
             
             // Update sections
             document.querySelectorAll('.content-section').forEach(section => {
                 section.classList.remove('active');
             });
-            document.getElementById(`${sectionName}Section`).classList.add('active');
+            document.getElementById(`${sectionName}Section`)?.classList.add('active');
             
             // Track analytics
             if (window.analytics) {
@@ -765,7 +790,9 @@
         
         // Add navigation handlers
         document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', () => switchSection(item.dataset.section));
+            item.addEventListener('click', () => {
+                switchSection(item.dataset.section);
+            });
         });
     </script>
 </body>
