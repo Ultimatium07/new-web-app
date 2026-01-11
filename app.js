@@ -77,6 +77,12 @@ class NexusApp {
         // Update UI
         this.updateUI();
         
+        // Initialize additional systems
+        this.initDailyChallenges();
+        this.initAchievements();
+        this.renderUpgrades();
+        this.loadLeaderboard();
+        
         // Track analytics
         if (window.analytics) {
             window.analytics.trackEvent('app_initialized');
@@ -781,60 +787,446 @@ class NexusApp {
         }
     }
     
-    // ==================== UTILITIES ====================
+    // ==================== UPGRADES SYSTEM ====================
     
-    formatNumber(num) {
-        if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
-        if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
-        return num.toString();
+    renderUpgrades() {
+        const upgradesGrid = document.getElementById('upgradesGrid');
+        if (!upgradesGrid) return;
+        
+        const upgrades = [
+            {
+                id: 'tap',
+                name: 'Tap Power',
+                description: 'Increase mining power by 1',
+                cost: this.state.mining.upgrades.tap.cost,
+                level: this.state.mining.upgrades.tap.level,
+                icon: 'fa-hammer',
+                effect: () => {
+                    this.state.mining.tapPower++;
+                }
+            },
+            {
+                id: 'energy',
+                name: 'Energy Capacity',
+                description: 'Increase max energy by 100',
+                cost: this.state.mining.upgrades.energy.cost,
+                level: this.state.mining.upgrades.energy.level,
+                icon: 'fa-battery-full',
+                effect: () => {
+                    this.state.user.maxEnergy += 100;
+                    this.state.user.energy += 100;
+                }
+            },
+            {
+                id: 'auto',
+                name: 'Auto Mining',
+                description: 'Generate 1 XP per second',
+                cost: this.state.mining.upgrades.auto.cost,
+                level: this.state.mining.upgrades.auto.level,
+                icon: 'fa-clock',
+                effect: () => {
+                    this.state.mining.autoMining += 1;
+                }
+            },
+            {
+                id: 'critical',
+                name: 'Critical Chance',
+                description: 'Increase critical hit chance by 5%',
+                cost: this.state.mining.upgrades.critical.cost,
+                level: this.state.mining.upgrades.critical.level,
+                icon: 'fa-crosshairs',
+                effect: () => {
+                    this.state.mining.criticalChance = Math.min(this.state.mining.criticalChance + 5, 100);
+                }
+            }
+        ];
+        
+        upgradesGrid.innerHTML = upgrades.map(upgrade => {
+            const canAfford = this.state.user.gold >= upgrade.cost;
+            const maxLevel = upgrade.level >= 100;
+            
+            return `
+                <div class="upgrade-card ${!canAfford || maxLevel ? 'disabled' : ''}" onclick="NexusApp.buyUpgrade('${upgrade.id}')">
+                    <div class="upgrade-icon">
+                        <i class="fas ${upgrade.icon}"></i>
+                    </div>
+                    <div class="upgrade-info">
+                        <h4>${upgrade.name}</h4>
+                        <p>${upgrade.description}</p>
+                        <div class="upgrade-level">Level ${upgrade.level}/100</div>
+                    </div>
+                    <div class="upgrade-cost">
+                        <i class="fas fa-coins"></i>
+                        <span>${this.formatNumber(upgrade.cost)}</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
     }
     
-    showToast(message, type = 'info') {
-        if (window.showToast) {
-            window.showToast(message, type);
-        } else {
-            console.log(`[${type.toUpperCase()}] ${message}`);
+    buyUpgrade(upgradeId) {
+        const upgrade = this.state.mining.upgrades[upgradeId];
+        if (!upgrade) return;
+        
+        if (this.state.user.gold < upgrade.cost) {
+            this.showToast('Not enough gold!', 'error');
+            return;
         }
+        
+        if (upgrade.level >= 100) {
+            this.showToast('Max level reached!', 'error');
+            return;
+        }
+        
+        // Apply upgrade effect
+        switch (upgradeId) {
+            case 'tap':
+                this.state.mining.tapPower++;
+                break;
+            case 'energy':
+                this.state.user.maxEnergy += 100;
+                this.state.user.energy += 100;
+                break;
+            case 'auto':
+                this.state.mining.autoMining += 1;
+                break;
+            case 'critical':
+                this.state.mining.criticalChance = Math.min(this.state.mining.criticalChance + 5, 100);
+                break;
+        }
+        
+        // Deduct cost
+        this.state.user.gold -= upgrade.cost;
+        
+        // Level up upgrade
+        upgrade.level++;
+        upgrade.cost = Math.floor(upgrade.cost * 1.5);
+        
+        // Update UI
+        this.updateUI();
+        this.renderUpgrades();
+        
+        // Show effect
+        this.triggerHaptic('medium');
+        this.showToast('Upgrade purchased!', 'success');
     }
     
-    triggerHaptic(type = 'light') {
-        if (window.Telegram?.WebApp?.HapticFeedback) {
-            switch (type) {
-                case 'light':
-                    window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+    // ==================== DAILY CHALLENGES ====================
+    
+    initDailyChallenges() {
+        const today = new Date().toDateString();
+        const lastReset = localStorage.getItem('lastDailyReset');
+        
+        if (lastReset !== today) {
+            this.generateDailyChallenges();
+            localStorage.setItem('lastDailyReset', today);
+        }
+        
+        this.renderDailyChallenges();
+    }
+    
+    generateDailyChallenges() {
+        this.state.dailyChallenges = [
+            {
+                id: 'tap_100',
+                name: 'Tap Master',
+                description: 'Tap 100 times',
+                progress: 0,
+                target: 100,
+                reward: { xp: 50, gold: 25 },
+                completed: false
+            },
+            {
+                id: 'quiz_5',
+                name: 'Quiz Champion',
+                description: 'Complete 5 quizzes',
+                progress: 0,
+                target: 5,
+                reward: { xp: 100, gold: 50 },
+                completed: false
+            },
+            {
+                id: 'battle_3',
+                name: 'Warrior',
+                description: 'Win 3 battles',
+                progress: 0,
+                target: 3,
+                reward: { xp: 150, gold: 75 },
+                completed: false
+            }
+        ];
+    }
+    
+    renderDailyChallenges() {
+        const challengesContainer = document.getElementById('dailyChallenges');
+        if (!challengesContainer) return;
+        
+        challengesContainer.innerHTML = this.state.dailyChallenges.map(challenge => {
+            const progress = (challenge.progress / challenge.target) * 100;
+            
+            return `
+                <div class="challenge-card ${challenge.completed ? 'completed' : ''}">
+                    <div class="challenge-info">
+                        <h4>${challenge.name}</h4>
+                        <p>${challenge.description}</p>
+                        <div class="challenge-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${progress}%"></div>
+                            </div>
+                            <span>${challenge.progress}/${challenge.target}</span>
+                        </div>
+                    </div>
+                    <div class="challenge-reward">
+                        <i class="fas fa-bolt"></i>
+                        <span>${challenge.reward.xp}</span>
+                        <i class="fas fa-coins"></i>
+                        <span>${challenge.reward.gold}</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    updateChallengeProgress(challengeId, amount = 1) {
+        const challenge = this.state.dailyChallenges.find(c => c.id === challengeId);
+        if (!challenge || challenge.completed) return;
+        
+        challenge.progress = Math.min(challenge.progress + amount, challenge.target);
+        
+        if (challenge.progress >= challenge.target) {
+            challenge.completed = true;
+            this.completeChallenge(challenge);
+        }
+        
+        this.renderDailyChallenges();
+    }
+    
+    completeChallenge(challenge) {
+        this.addXP(challenge.reward.xp, 'daily_challenge');
+        this.addGold(challenge.reward.gold, 'daily_challenge');
+        this.showToast(`Challenge completed! +${challenge.reward.xp} XP, +${challenge.reward.gold} Gold`, 'success');
+        this.triggerHaptic('heavy');
+    }
+    
+    // ==================== ACHIEVEMENTS ====================
+    
+    initAchievements() {
+        this.state.achievements = [
+            {
+                id: 'first_tap',
+                name: 'First Steps',
+                description: 'Make your first tap',
+                icon: 'fa-hand-pointer',
+                unlocked: false,
+                reward: { xp: 10, gold: 5 }
+            },
+            {
+                id: 'tap_1000',
+                name: 'Tap Master',
+                description: 'Tap 1000 times',
+                icon: 'fa-hammer',
+                unlocked: false,
+                reward: { xp: 100, gold: 50 }
+            },
+            {
+                id: 'level_10',
+                name: 'Rising Star',
+                description: 'Reach level 10',
+                icon: 'fa-star',
+                unlocked: false,
+                reward: { xp: 200, gold: 100 }
+            }
+        ];
+        
+        this.checkAchievements();
+    }
+    
+    checkAchievements() {
+        this.state.achievements.forEach(achievement => {
+            if (achievement.unlocked) return;
+            
+            let shouldUnlock = false;
+            
+            switch (achievement.id) {
+                case 'first_tap':
+                    shouldUnlock = this.state.user.stats.totalTaps >= 1;
                     break;
-                case 'medium':
-                    window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+                case 'tap_1000':
+                    shouldUnlock = this.state.user.stats.totalTaps >= 1000;
                     break;
-                case 'heavy':
-                    window.Telegram.WebApp.HapticFeedback.impactOccurred('heavy');
-                    break;
-                case 'error':
-                    window.Telegram.WebApp.HapticFeedback.notificationOccurred('error');
-                    break;
-                case 'success':
-                    window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+                case 'level_10':
+                    shouldUnlock = this.state.user.level >= 10;
                     break;
             }
+            
+            if (shouldUnlock) {
+                this.unlockAchievement(achievement);
+            }
+        });
+    }
+    
+    unlockAchievement(achievement) {
+        achievement.unlocked = true;
+        this.addXP(achievement.reward.xp, 'achievement');
+        this.addGold(achievement.reward.gold, 'achievement');
+        
+        this.showToast(`🏆 Achievement Unlocked: ${achievement.name}!`, 'success');
+        this.triggerHaptic('heavy');
+        
+        // Show achievement modal
+        this.showAchievementModal(achievement);
+    }
+    
+    showAchievementModal(achievement) {
+        const content = `
+            <div class="achievement-modal">
+                <div class="achievement-icon">
+                    <i class="fas ${achievement.icon}"></i>
+                </div>
+                <h3>${achievement.name}</h3>
+                <p>${achievement.description}</p>
+                <div class="achievement-reward">
+                    <span>+${achievement.reward.xp} XP</span>
+                    <span>+${achievement.reward.gold} Gold</span>
+                </div>
+            </div>
+        `;
+        
+        showModal('Achievement Unlocked!', content);
+    }
+    
+    // ==================== LEADERBOARD ====================
+    
+    async loadLeaderboard(period = 'weekly') {
+        // Mock data - in real app, fetch from API
+        const mockLeaderboard = [
+            { rank: 1, name: 'QuantumMaster', xp: 50000, level: 50, avatar: '👑' },
+            { rank: 2, name: 'NexusWarrior', xp: 45000, level: 45, avatar: '🥈' },
+            { rank: 3, name: 'SuperPlayer', xp: 40000, level: 40, avatar: '🥉' },
+            { rank: 4, name: 'ProGamer', xp: 35000, level: 35, avatar: '🎮' },
+            { rank: 5, name: 'Champion', xp: 30000, level: 30, avatar: '🏆' },
+            { rank: 6, name: 'Expert', xp: 25000, level: 25, avatar: '⭐' },
+            { rank: 7, name: 'Master', xp: 20000, level: 20, avatar: '🎯' },
+            { rank: 8, name: 'Hero', xp: 15000, level: 15, avatar: '🦸' },
+            { rank: 9, name: 'Legend', xp: 10000, level: 10, avatar: '💫' },
+            { rank: 10, name: 'You', xp: this.state.user.xp, level: this.state.user.level, avatar: '👤' }
+        ];
+        
+        this.renderLeaderboard(mockLeaderboard);
+    }
+    
+    renderLeaderboard(leaderboard) {
+        const leaderboardList = document.getElementById('leaderboardList');
+        if (!leaderboardList) return;
+        
+        leaderboardList.innerHTML = leaderboard.map(player => {
+            const isCurrentUser = player.name === 'You';
+            
+            return `
+                <div class="leaderboard-item ${isCurrentUser ? 'current-user' : ''}">
+                    <div class="rank">
+                        ${player.rank <= 3 ? `<i class="fas fa-trophy rank-${player.rank}"></i>` : player.rank}
+                    </div>
+                    <div class="player-info">
+                        <span class="player-avatar">${player.avatar}</span>
+                        <span class="player-name">${player.name}</span>
+                    </div>
+                    <div class="player-stats">
+                        <span class="player-level">Lv.${player.level}</span>
+                        <span class="player-xp">${this.formatNumber(player.xp)} XP</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    // ==================== NOTIFICATIONS ====================
+    
+    showNotification(message, type = 'info', duration = 3000) {
+        // Check if notifications are enabled
+        if (this.state.settings && !this.state.settings.notifications) return;
+        
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.innerHTML = `
+            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+            <span>${message}</span>
+        `;
+        
+        // Add to container
+        const container = document.getElementById('toastContainer');
+        if (container) {
+            container.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => notification.classList.add('show'), 100);
+            
+            // Remove after duration
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, duration);
         }
     }
     
-    pauseGame() {
-        // Clear intervals
-        Object.values(this.intervals).forEach(interval => clearInterval(interval));
-    }
+    // ==================== SOUND SYSTEM ====================
     
-    resumeGame() {
-        // Restart game loops
-        this.startGameLoops();
-    }
-    
-    goBack() {
-        if (window.Telegram?.WebApp?.BackButton.isVisible) {
-            window.Telegram.WebApp.close();
-        } else if (this.currentSection !== 'mining') {
-            this.switchSection('mining');
+    playSound(soundName, options = {}) {
+        if (this.state.settings && !this.state.settings.sound) return;
+        
+        // Mock sound system - in real app, use actual audio files
+        console.log(`Playing sound: ${soundName}`, options);
+        
+        // Haptic feedback if requested
+        if (options.vibrate) {
+            this.triggerHaptic(options.vibrate > 50 ? 'heavy' : options.vibrate > 20 ? 'medium' : 'light');
         }
+    }
+    
+    // ==================== EXPORT/IMPORT ====================
+    
+    exportData() {
+        const data = {
+            state: this.state,
+            version: '1.0.0',
+            timestamp: Date.now()
+        };
+        
+        const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `nexus-quantum-backup-${Date.now()}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        
+        this.showToast('Game data exported!', 'success');
+    }
+    
+    importData(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const data = JSON.parse(e.target.result);
+                
+                // Validate data
+                if (!data.state || !data.version) {
+                    throw new Error('Invalid save file');
+                }
+                
+                // Import data
+                this.state = { ...this.state, ...data.state };
+                this.saveUserData();
+                this.updateUI();
+                
+                this.showToast('Game data imported successfully!', 'success');
+            } catch (error) {
+                this.showToast('Failed to import save file!', 'error');
+                console.error('Import error:', error);
+            }
+        };
+        reader.readAsText(file);
     }
 }
 
