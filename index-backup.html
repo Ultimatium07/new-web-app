@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="quantum">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="NEXUS QUANTUM APEX - World's #1 Super App with Gaming, AI, and Social Features">
+    <meta name="keywords" content="quantum, gaming, ai, mining, quiz, battle, telegram, webapp, pwa">
+    <meta name="author" content="Ultimatium07">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://new-web-app-blue.vercel.app/">
+    <meta property="og:title" content="NEXUS QUANTUM APEX - Ultimate Super App">
+    <meta property="og:description" content="Experience the future with quantum-powered gaming and AI">
+    <meta property="og:image" content="https://new-web-app-blue.vercel.app/og-image.jpg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://new-web-app-blue.vercel.app/">
+    <meta property="twitter:title" content="NEXUS QUANTUM APEX - Ultimate Super App">
+    <meta property="twitter:description" content="Experience the future with quantum-powered gaming and AI">
+    <meta property="twitter:image" content="https://new-web-app-blue.vercel.app/og-image.jpg">
+    
+    <!-- Telegram WebApp -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600;700&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles-upgrades.css">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#00ffff">
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="app.js" as="script">
+    <link rel="preload" href="effects.js" as="script">
+    
+    <title>NEXUS QUANTUM APEX - Ultimate Super App</title>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loader" class="quantum-loader">
+        <div class="loader-content">
+            <div class="quantum-logo">
+                <div class="logo-core"></div>
+                <div class="logo-ring ring-1"></div>
+                <div class="logo-ring ring-2"></div>
+                <div class="logo-ring ring-3"></div>
+                <div class="logo-particles"></div>
+            </div>
+            <h2 class="loader-title">NEXUS QUANTUM APEX</h2>
+            <p class="loader-subtitle">Initializing Quantum Universe...</p>
+            <div class="loader-bar">
+                <div class="loader-progress"></div>
+            </div>
+            <div class="loader-percentage">0%</div>
+        </div>
+    </div>
+    
+    <!-- Background Effects -->
+    <canvas id="quantumBg" class="bg-canvas"></canvas>
+    <canvas id="neuralBg" class="bg-canvas"></canvas>
+    <canvas id="particleCanvas" class="bg-canvas"></canvas>
+    <div class="scan-lines"></div>
+    <div class="data-stream"></div>
+    
+    <!-- Main Application -->
+    <div id="app" class="quantum-container">
+        <!-- Header -->
+        <header class="quantum-header">
+            <div class="header-top">
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">
+                        <img src="https://ui-avatars.com/api/?name=Quantum&background=00ffff&color=000&size=50" alt="Avatar" id="avatarImg">
+                        <div class="avatar-frame quantum-glow"></div>
+                        <div class="level-indicator">1</div>
+                    </div>
+                    <div class="user-details">
+                        <div class="user-name" id="userName">Quantum User</div>
+                        <div class="user-title">Level <span id="userLevel">1</span> • <span id="userTier">Standard</span></div>
+                    </div>
+                </div>
+                
+                <div class="header-actions">
+                    <button class="icon-btn" id="notificationsBtn" title="Notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-dot"></span>
+                    </button>
+                    <button class="icon-btn" id="settingsBtn" title="Settings">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <button class="icon-btn" id="shareBtn" title="Share">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="header-stats">
+                <div class="stat-group">
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="userXP">0</div>
+                            <div class="stat-label">XP</div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon gold">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="userGold">0</div>
+                            <div class="stat-label">Gold</div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon energy">
+                            <i class="fas fa-battery-three-quarters"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="userEnergy">1000</div>
+                            <div class="stat-label">Energy</div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon streak">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="userStreak">0</div>
+                            <div class="stat-label">Days</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Progress Bars -->
+            <div class="progress-bars">
+                <div class="progress-item">
+                    <div class="progress-header">
+                        <span class="progress-label">Level Progress</span>
+                        <span class="progress-value" id="xpProgressText">0 / 100</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill xp-fill" id="xpProgress" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-header">
+                        <span class="progress-label">Energy</span>
+                        <span class="progress-value" id="energyProgressText">1000 / 1000</span>
+                    </div>
+                    <div class="progress-bar energy-bar">
+                        <div class="progress-fill energy-fill" id="energyFill" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <main class="quantum-main">
+            <!-- Mining Section -->
+            <section id="miningSection" class="content-section active">
+                <div class="section-header">
+                    <h2><i class="fas fa-bolt"></i> Quantum Mining</h2>
+                    <div class="section-stats">
+                        <span class="stat-badge">Combo: <span id="comboCount">0</span>x</span>
+                        <span class="stat-badge">Critical: <span id="criticalChance">10</span>%</span>
+                        <span class="stat-badge">Power: <span id="tapPower">1</span></span>
+                    </div>
+                </div>
+                
+                <div class="mining-container">
+                    <div class="quantum-core" id="quantumCore">
+                        <div class="core-layers">
+                            <div class="core-layer layer-1"></div>
+                            <div class="core-layer layer-2"></div>
+                            <div class="core-layer layer-3"></div>
+                            <div class="core-layer layer-4"></div>
+                        </div>
+                        <div class="core-center">
+                            <div class="core-text">
+                                <div class="tap-hint">TAP TO MINE</div>
+                                <div class="energy-indicator">1 Energy</div>
+                            </div>
+                            <div class="core-pulse"></div>
+                        </div>
+                        <div class="core-particles" id="coreParticles"></div>
+                        <div class="energy-ring"></div>
+                    </div>
+                    
+                    <div class="mining-stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-mouse-pointer"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="totalTaps">0</div>
+                                <div class="stat-label">Total Taps</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-hammer"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="tapPower">1</div>
+                                <div class="stat-label">Tap Power</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="autoMining">0</div>
+                                <div class="stat-label">Auto/sec</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-gem"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="quantumGems">0</div>
+                                <div class="stat-label">Gems</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="upgrades-section">
+                    <h3>Upgrades & Boosters</h3>
+                    <div class="upgrade-tabs">
+                        <button class="tab-btn active" data-tab="upgrades">Upgrades</button>
+                        <button class="tab-btn" data-tab="boosters">Boosters</button>
+                    </div>
+                    <div class="upgrades-grid" id="upgradesGrid">
+                        <!-- Upgrades will be dynamically added -->
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Quiz Section -->
+            <section id="quizSection" class="content-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-brain"></i> AI Quiz Challenge</h2>
+                    <div class="section-stats">
+                        <span class="stat-badge">Completed: <span id="quizCompleted">0</span></span>
+                        <span class="stat-badge">Perfect: <span id="perfectQuizzes">0</span></span>
+                        <span class="stat-badge">Best Score: <span id="bestQuizScore">0</span></span>
+                    </div>
+                </div>
+                
+                <div class="quiz-container">
+                    <div class="quiz-categories">
+                        <div class="category-card active" data-category="general">
+                            <div class="category-icon">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <div class="category-info">
+                                <span class="category-name">General</span>
+                                <span class="category-count">10 Qs</span>
+                            </div>
+                        </div>
+                        <div class="category-card" data-category="science">
+                            <div class="category-icon">
+                                <i class="fas fa-flask"></i>
+                            </div>
+                            <div class="category-info">
+                                <span class="category-name">Science</span>
+                                <span class="category-count">10 Qs</span>
+                            </div>
+                        </div>
+                        <div class="category-card" data-category="technology">
+                            <div class="category-icon">
+                                <i class="fas fa-microchip"></i>
+                            </div>
+                            <div class="category-info">
+                                <span class="category-name">Technology</span>
+                                <span class="category-count">10 Qs</span>
+                            </div>
+                        </div>
+                        <div class="category-card" data-category="history">
+                            <div class="category-icon">
+                                <i class="fas fa-landmark"></i>
+                            </div>
+                            <div class="category-info">
+                                <span class="category-name">History</span>
+                                <span class="category-count">10 Qs</span>
+                            </div>
+                        </div>
+                        <div class="category-card" data-category="sports">
+                            <div class="category-icon">
+                                <i class="fas fa-football-ball"></i>
+                            </div>
+                            <div class="category-info">
+                                <span class="category-name">Sports</span>
+                                <span class="category-count">10 Qs</span>
+                            </div>
+                        </div>
+                        <div class="category-card" data-category="programming">
+                            <div class="category-icon">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <div class="category-info">
+                                <span class="category-name">Programming</span>
+                                <span class="category-count">10 Qs</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="quiz-area" id="quizArea">
+                        <div class="quiz-start">
+                            <div class="quiz-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <h3>Test Your Knowledge!</h3>
+                            <p>Challenge yourself with AI-generated questions</p>
+                            <div class="quiz-options">
+                                <button class="quantum-button primary" onclick="startQuiz()">
+                                    <i class="fas fa-play"></i> Start Quiz
+                                </button>
+                                <button class="quantum-button secondary" onclick="practiceMode()">
+                                    <i class="fas fa-dumbbell"></i> Practice Mode
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Battle Section -->
+            <section id="battleSection" class="content-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-gamepad"></i> Battle Arena</h2>
+                    <div class="section-stats">
+                        <span class="stat-badge">Wins: <span id="battleWins">0</span></span>
+                        <span class="stat-badge">Win Rate: <span id="winRate">0</span>%</span>
+                        <span class="stat-badge">Rank: <span id="battleRank">Bronze</span></span>
+                    </div>
+                </div>
+                
+                <div class="battle-container">
+                    <div class="battle-modes">
+                        <div class="mode-card" onclick="createBattleRoom()">
+                            <div class="mode-icon">
+                                <i class="fas fa-plus-circle"></i>
+                            </div>
+                            <h4>Create Room</h4>
+                            <p>Create a private battle room</p>
+                        </div>
+                        <div class="mode-card" onclick="joinBattleRoom()">
+                            <div class="mode-icon">
+                                <i class="fas fa-sign-in-alt"></i>
+                            </div>
+                            <h4>Join Room</h4>
+                            <p>Join with room code</p>
+                        </div>
+                        <div class="mode-card featured" onclick="quickMatch()">
+                            <div class="mode-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <h4>Quick Match</h4>
+                            <p>Instant matchmaking</p>
+                        </div>
+                        <div class="mode-card" onclick="tournamentMode()">
+                            <div class="mode-icon">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <h4>Tournament</h4>
+                            <p>Compete for prizes</p>
+                        </div>
+                    </div>
+                    
+                    <div class="battle-arena" id="battleArena">
+                        <div class="battle-start">
+                            <div class="battle-icon">
+                                <i class="fas fa-gamepad"></i>
+                            </div>
+                            <h3>Choose Your Battle!</h3>
+                            <p>Challenge players worldwide in real-time battles</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Wayground (Leaderboard) Section -->
+            <section id="waygroundSection" class="content-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-trophy"></i> Leaderboard</h2>
+                    <div class="section-stats">
+                        <span class="stat-badge">Your Rank: <span id="userRank">-</span></span>
+                        <span class="stat-badge">Points: <span id="seasonPoints">0</span></span>
+                    </div>
+                </div>
+                
+                <div class="leaderboard-container">
+                    <div class="leaderboard-tabs">
+                        <button class="tab-btn active" data-period="weekly">
+                            <i class="fas fa-calendar-week"></i> Weekly
+                        </button>
+                        <button class="tab-btn" data-period="monthly">
+                            <i class="fas fa-calendar-alt"></i> Monthly
+                        </button>
+                        <button class="tab-btn" data-period="alltime">
+                            <i class="fas fa-crown"></i> All Time
+                        </button>
+                        <button class="tab-btn" data-period="friends">
+                            <i class="fas fa-users"></i> Friends
+                        </button>
+                    </div>
+                    
+                    <div class="leaderboard-content">
+                        <div class="leaderboard-list" id="leaderboardList">
+                            <!-- Leaderboard entries will be dynamically added -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Files Section -->
+            <section id="filesSection" class="content-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-folder-open"></i> AI Analysis Lab</h2>
+                    <div class="section-stats">
+                        <span class="stat-badge">Analyzed: <span id="filesAnalyzed">0</span></span>
+                        <span class="stat-badge">Storage: <span id="storageUsed">0</span>MB</span>
+                    </div>
+                </div>
+                
+                <div class="files-container">
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-content">
+                            <div class="upload-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <h3>Upload for AI Analysis</h3>
+                            <p>Drag & drop files or click to select</p>
+                            <div class="supported-formats">
+                                <span>Images</span>
+                                <span>Documents</span>
+                                <span>Audio</span>
+                                <span>Video</span>
+                            </div>
+                            <input type="file" id="fileInput" multiple accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt">
+                            <button class="quantum-button primary" onclick="document.getElementById('fileInput').click()">
+                                <i class="fas fa-upload"></i> Select Files
+                            </button>
+                        </div>
+                        <div class="upload-overlay"></div>
+                    </div>
+                    
+                    <div class="upload-methods">
+                        <button class="method-btn" onclick="openCamera()">
+                            <i class="fas fa-camera"></i>
+                            <span>Camera</span>
+                        </button>
+                        <button class="method-btn" onclick="selectFromGallery()">
+                            <i class="fas fa-images"></i>
+                            <span>Gallery</span>
+                        </button>
+                        <button class="method-btn" onclick="selectDocument()">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Documents</span>
+                        </button>
+                        <button class="method-btn" onclick="selectAudio()">
+                            <i class="fas fa-microphone"></i>
+                            <span>Audio</span>
+                        </button>
+                    </div>
+                    
+                    <div class="analysis-results" id="analysisResults">
+                        <!-- Analysis results will appear here -->
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Profile Section -->
+            <section id="profileSection" class="content-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-user"></i> Profile</h2>
+                    <div class="section-actions">
+                        <button class="icon-btn" onclick="shareProfile()">
+                            <i class="fas fa-share-alt"></i>
+                        </button>
+                        <button class="icon-btn" onclick="editProfile()">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="profile-container">
+                    <div class="profile-header">
+                        <div class="profile-avatar-container">
+                            <div class="profile-avatar">
+                                <img src="https://ui-avatars.com/api/?name=Quantum&background=00ffff&color=000&size=100" alt="Avatar" id="profileAvatar">
+                                <div class="avatar-frame quantum-glow"></div>
+                                <div class="level-badge">Level <span id="profileLevel">1</span></div>
+                            </div>
+                            <button class="change-avatar-btn" onclick="changeAvatar()">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                        </div>
+                        <div class="profile-info">
+                            <h3 id="profileName">Quantum User</h3>
+                            <p id="profileBio">Master of the Quantum Universe 🌌</p>
+                            <div class="profile-badges">
+                                <span class="badge tier-badge" id="tierBadge">Standard</span>
+                                <span class="badge streak-badge">
+                                    <i class="fas fa-fire"></i> <span id="profileStreak">0</span> days
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-stats-grid">
+                        <div class="profile-stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="profileXP">0</div>
+                                <div class="stat-label">Total XP</div>
+                            </div>
+                        </div>
+                        <div class="profile-stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-coins"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="profileGold">0</div>
+                                <div class="stat-label">Gold</div>
+                            </div>
+                        </div>
+                        <div class="profile-stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="profileAchievements">0</div>
+                                <div class="stat-label">Achievements</div>
+                            </div>
+                        </div>
+                        <div class="profile-stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-gamepad"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="profileBattles">0</div>
+                                <div class="stat-label">Battles</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="achievements-section">
+                        <div class="section-header">
+                            <h3>Recent Achievements</h3>
+                            <button class="text-btn" onclick="viewAllAchievements()">View All</button>
+                        </div>
+                        <div class="achievements-grid" id="achievementsGrid">
+                            <!-- Achievements will be dynamically added -->
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3>Settings</h3>
+                        <div class="settings-grid">
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <i class="fas fa-bell"></i>
+                                    <div>
+                                        <div class="setting-name">Notifications</div>
+                                        <div class="setting-desc">Get updates on your progress</div>
+                                    </div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="notificationsToggle" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <i class="fas fa-volume-up"></i>
+                                    <div>
+                                        <div class="setting-name">Sound Effects</div>
+                                        <div class="setting-desc">Play sounds for actions</div>
+                                    </div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="soundToggle" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <i class="fas fa-hand-pointer"></i>
+                                    <div>
+                                        <div class="setting-name">Haptic Feedback</div>
+                                        <div class="setting-desc">Vibrate on interactions</div>
+                                    </div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="hapticToggle" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <i class="fas fa-moon"></i>
+                                    <div>
+                                        <div class="setting-name">Dark Mode</div>
+                                        <div class="setting-desc">Easier on the eyes</div>
+                                    </div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="darkModeToggle" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- Bottom Navigation -->
+        <nav class="quantum-nav">
+            <button class="nav-item active" data-section="mining">
+                <i class="fas fa-bolt"></i>
+                <span>Mining</span>
+            </button>
+            <button class="nav-item" data-section="quiz">
+                <i class="fas fa-brain"></i>
+                <span>Quiz</span>
+            </button>
+            <button class="nav-item" data-section="battle">
+                <i class="fas fa-gamepad"></i>
+                <span>Battle</span>
+            </button>
+            <button class="nav-item" data-section="wayground">
+                <i class="fas fa-trophy"></i>
+                <span>Ranking</span>
+            </button>
+            <button class="nav-item" data-section="files">
+                <i class="fas fa-folder-open"></i>
+                <span>Files</span>
+            </button>
+            <button class="nav-item" data-section="profile">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </button>
+        </nav>
+    </div>
+    
+    <!-- Modals -->
+    <div id="modalContainer" class="modal-container">
+        <div class="modal-overlay" onclick="closeModal()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Modal Title</h3>
+                <button class="modal-close" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                Modal content goes here
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+    
+    <!-- Pull to Refresh -->
+    <div id="pullToRefresh" class="pull-to-refresh">
+        <i class="fas fa-sync-alt"></i>
+        <span>Pull to refresh</span>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="app.js"></script>
+    <script src="effects.js"></script>
+    <script src="gamification.js"></script>
+    <script src="mobile.js"></script>
+    <script src="security.js"></script>
+    <script src="analytics.js"></script>
+    
+    <!-- Main App Initialization -->
+    <script>
+        // Initialize app when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                // Initialize all modules safely
+                if (window.QuantumEffects) {
+                    window.QuantumEffects.init();
+                }
+                
+                if (window.GamificationEngine) {
+                    window.GamificationEngine.init();
+                }
+                
+                if (window.MobileOptimizer) {
+                    window.MobileOptimizer.init();
+                }
+                
+                if (window.SecuritySystem) {
+                    window.SecuritySystem.init();
+                }
+                
+                if (window.AnalyticsEngine) {
+                    window.AnalyticsEngine.init();
+                }
+                
+                // Initialize main app
+                if (window.NexusApp) {
+                    window.NexusApp.init();
+                }
+                
+                console.log('✅ All modules loaded successfully!');
+            } catch (error) {
+                console.error('❌ Error initializing app:', error);
+                // Hide loader even if error occurs
+                const loader = document.getElementById('loader');
+                if (loader) {
+                    loader.style.display = 'none';
+                }
+            }
+        });
+        
+        // Global utility functions
+        function showToast(message, type = 'info', duration = 3000) {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.getElementById('toastContainer').appendChild(toast);
+            
+            setTimeout(() => toast.classList.add('show'), 100);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, duration);
+        }
+        
+        function showModal(title, content) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalBody').innerHTML = content;
+            document.getElementById('modalContainer').classList.add('show');
+        }
+        
+        function closeModal() {
+            document.getElementById('modalContainer').classList.remove('show');
+        }
+        
+        function switchSection(sectionName) {
+            // Update navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`[data-section="${sectionName}"]`)?.classList.add('active');
+            
+            // Update sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(`${sectionName}Section`)?.classList.add('active');
+            
+            // Track analytics
+            if (window.analytics) {
+                window.analytics.trackEvent('navigation', { section: sectionName });
+            }
+        }
+        
+        // Add navigation handlers
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                switchSection(item.dataset.section);
+            });
+        });
+    </script>
+</body>
+</html>
