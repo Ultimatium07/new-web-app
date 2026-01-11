@@ -3,7 +3,7 @@
 > **World's #1 Individual Developer Super App** - Quantum-powered gaming, AI, and social platform
 
 ## 🚀 LIVE DEMO
-**https://nexus-quantum-apex.vercel.app**
+**https://new-web-app-blue.vercel.app**
 
 ## 📱 What's Inside?
 

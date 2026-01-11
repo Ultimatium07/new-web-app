@@ -2,7 +2,7 @@
     "name": "NEXUS QUANTUM APEX",
     "short_name": "Nexus Apex",
     "description": "World's #1 Super App with Gaming, AI, and Social Features",
-    "start_url": "/",
+    "start_url": "https://new-web-app-blue.vercel.app/",
     "display": "standalone",
     "background_color": "#000000",
     "theme_color": "#00ffff",
