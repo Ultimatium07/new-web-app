@@ -250,6 +250,7 @@ body {
     font-size: 24px;
     font-weight: 900;
     background: var(--gradient-quantum);
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: var(--space-sm);
@@ -555,6 +556,7 @@ body {
     font-size: 24px;
     font-family: var(--font-display);
     background: var(--gradient-quantum);
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     display: flex;
@@ -1580,6 +1582,7 @@ input:checked + .toggle-slider:before {
 
 .text-gradient {
     background: var(--gradient-quantum);
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
